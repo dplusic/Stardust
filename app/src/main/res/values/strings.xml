@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Stardust</string>
     <string name="hello">Hello World, Stardust!</string>
+    <string name="textView_placeholder">TextView</string>
+    <string name="retry">Retry</string>
+    <string name="gameover">GameOver</string>
+    <string name="win">Win</string>
 </resources>

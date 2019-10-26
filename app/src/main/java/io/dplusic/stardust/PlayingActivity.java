@@ -20,9 +20,9 @@ import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.widget.LinearLayout;
+import android.view.ViewGroup;
 import android.widget.TextView;
-import io.dplusic.stardust.entity.Dust;
+
 import io.dplusic.stardust.entity.Player;
 import io.dplusic.stardust.entity.Star;
 
@@ -45,6 +45,7 @@ public class PlayingActivity extends Activity {
 	private boolean confirmTouchScreen = false;
 
 	private AI ai;
+	private GameEndChecker gameEndManager;
 
 	private TextView[] infectivityViews;
 
@@ -78,21 +79,20 @@ public class PlayingActivity extends Activity {
 		stars.add(namedStar1);
 		stars.add(namedStar2);
 
-		ai = new AI(stars);
-
 		List<Player> players = Player.getActivePlayers();
 		players.remove(Player.getInstance(Player.PLAYER_TYPE_NOBODY));
 
-		infectivityViews = new TextView[players.size()];
+		ViewGroup playingLayout = (ViewGroup) getLayoutInflater().inflate(R.layout.playing, null);
+		setContentView(playingLayout);
 
-		LinearLayout layout = new LinearLayout(this);
-		layout.setOrientation(LinearLayout.VERTICAL);
-
-		LinearLayout textLayout = new LinearLayout(this);
+		infectivityViews = new TextView[] {
+			playingLayout.findViewById(R.id.textView_score1),
+			playingLayout.findViewById(R.id.textView_score2)
+		};
 
 		for (int i = 0; i < infectivityViews.length; i++) {
 
-			TextView infectivityView = new TextView(this);
+			TextView infectivityView = infectivityViews[i];
 			Player player = players.get(i);
 			float[] playerIdColor = player.getPlayerIdColor();
 
@@ -102,24 +102,24 @@ public class PlayingActivity extends Activity {
 					(int) (playerIdColor[1] * 255),
 					(int) (playerIdColor[2] * 255)));
 			infectivityView.setTag(player.getPlayerType());
-
-			infectivityViews[i] = infectivityView;
-
-			textLayout.addView(infectivityView);
 		}
-		layout.addView(textLayout);
 
 		GLSurfaceView glSurfaceView = new GLSurfaceView(this);
 		glSurfaceView.setRenderer(renderer);
 		glSurfaceView.setOnTouchListener(onViewTouchListener);
-		layout.addView(glSurfaceView);
-		setContentView(layout);
+		((ViewGroup) playingLayout.findViewById(R.id.layout_glSurfaceViewWrapper)).addView(glSurfaceView);
 
 		SensorManager man = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		Sensor roc_sensor = man.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
 		man.registerListener(sListen, roc_sensor,
 				SensorManager.SENSOR_DELAY_GAME);
 
+		ai = new AI(stars);
+		gameEndManager = new GameEndChecker(
+				this,
+				infectivityViews,
+				(ViewGroup) playingLayout.findViewById(R.id.layout_gameover),
+				(ViewGroup) playingLayout.findViewById(R.id.layout_win));
 	}
 
 	@Override
@@ -136,28 +136,7 @@ public class PlayingActivity extends Activity {
 			entityManager.updateAll();
 
 			ai.update();
-
-			for (TextView infectivityView : infectivityViews) {
-
-				Player player = Player.getInstance((Integer) infectivityView
-						.getTag());
-
-				int infectivityOfStars = 0;
-				int infectivityOfDusts = 0;
-
-				List<Star> stars = player.getOwnedList(Star.class);
-				for (Star star : stars) {
-					infectivityOfStars += star.getInfectivity();
-				}
-
-				List<Dust> dusts = player.getOwnedList(Dust.class);
-				for (Dust dust : dusts) {
-					infectivityOfDusts += dust.getInfectivity();
-				}
-
-				infectivityView.setText(String.format("%d / %d",
-						infectivityOfDusts, infectivityOfStars));
-			}
+			gameEndManager.update();
 
 			handler.postDelayed(updater, GAME_MILLISECOND_PER_CLOCK);
 		}

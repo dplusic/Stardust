@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/layout_glSurfaceViewWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView_score1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/textView_placeholder" />
+
+        <TextView
+            android:id="@+id/textView_score2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/textView_placeholder" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:foregroundGravity="center">
+
+        <LinearLayout
+            android:id="@+id/layout_win"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="#696969"
+            android:minWidth="300sp"
+            android:orientation="vertical"
+            android:padding="50sp"
+            android:visibility="invisible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/win"
+                android:textColor="#FFFFFF"
+                android:textSize="36sp" />
+
+            <Button
+                android:id="@+id/button_retry_win"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30sp"
+                android:text="@string/retry" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_gameover"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="#696969"
+            android:minWidth="300sp"
+            android:orientation="vertical"
+            android:padding="50sp"
+            android:visibility="invisible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/gameover"
+                android:textColor="#FFFFFF"
+                android:textSize="36sp" />
+
+            <Button
+                android:id="@+id/button_retry_gameover"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30sp"
+                android:text="@string/retry" />
+        </LinearLayout>
+    </FrameLayout>
+
+</FrameLayout>
