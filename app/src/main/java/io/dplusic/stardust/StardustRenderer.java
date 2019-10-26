@@ -15,6 +15,7 @@ import android.graphics.Paint;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
 
+import io.dplusic.cbes.EntityManager;
 import io.dplusic.stardust.component.Renderable;
 import io.dplusic.stardust.component.Selectable;
 import io.dplusic.stardust.mesh.Background;
@@ -157,7 +158,7 @@ public class StardustRenderer implements Renderer {
 			gl.glDisable(GL10.GL_DITHER);
 			gl.glDisable(GL10.GL_BLEND);
 
-			for (Selectable selectable : ComponentManager
+			for (Selectable selectable : EntityManager.getInstance().getComponentManager()
 					.getComponents(Selectable.class)) {
 				selectable.picking(gl);
 			}
@@ -184,7 +185,7 @@ public class StardustRenderer implements Renderer {
 
 		drawBackground(gl);
 
-		for (Renderable renderable : ComponentManager
+		for (Renderable renderable : EntityManager.getInstance().getComponentManager()
 				.getComponents(Renderable.class)) {
 			renderable.draw(gl);
 		}

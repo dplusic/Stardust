@@ -7,9 +7,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ComponentManager {
 
-	private static Map<Class<? extends Component>, Iterable<? extends Component>> componentListMap = new HashMap<Class<? extends Component>, Iterable<? extends Component>>();
+	private Map<Class<? extends Component>, Iterable<? extends Component>> componentListMap = new HashMap<Class<? extends Component>, Iterable<? extends Component>>();
 
-	public static <T extends Component> Iterable<T> getComponents(
+	public <T extends Component> Iterable<T> getComponents(
 			Class<T> componentClass) {
 
 		@SuppressWarnings("unchecked")
@@ -24,7 +24,7 @@ public class ComponentManager {
 		return componentList;
 	}
 
-	protected static <T extends Component> void addComponent(T component) {
+	protected <T extends Component> void addComponent(T component) {
 
 		@SuppressWarnings("unchecked")
 		Queue<T> componentList = (Queue<T>) getComponents(component.getClass());
@@ -32,7 +32,7 @@ public class ComponentManager {
 		componentList.add(component);
 	}
 
-	public static <T extends Component> void removeComponent(T component) {
+	public <T extends Component> void removeComponent(T component) {
 
 		@SuppressWarnings("unchecked")
 		Queue<T> componentList = (Queue<T>) getComponents(component.getClass());

@@ -104,4 +104,8 @@ public class Player extends Entity {
 		return players[playerType];
 	}
 
+	public static void reset() {
+		players = new Player[NUMBER_OF_PLAYER_TYPE];
+	}
+
 }

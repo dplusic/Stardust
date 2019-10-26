@@ -2,12 +2,14 @@ package io.dplusic.stardust;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.drm.DrmStore;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
 
+import io.dplusic.cbes.EntityManager;
 import io.dplusic.stardust.entity.Dust;
 import io.dplusic.stardust.entity.Player;
 import io.dplusic.stardust.entity.Star;
@@ -95,6 +97,9 @@ public class GameEndChecker {
             Intent intent = playingActivity.getIntent();
             playingActivity.finish();
             playingActivity.startActivity(intent);
+
+            EntityManager.reset();
+            Player.reset();
         }
     };
 }

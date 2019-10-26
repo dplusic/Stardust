@@ -16,11 +16,11 @@ public abstract class Component {
 		}
 		this.entity = entity;
 
-		ComponentManager.addComponent(this);
+		EntityManager.getInstance().getComponentManager().addComponent(this);
 	}
 
 	void remove() {
-		ComponentManager.removeComponent(this);
+		EntityManager.getInstance().getComponentManager().removeComponent(this);
 	}
 
 	public void update() {
