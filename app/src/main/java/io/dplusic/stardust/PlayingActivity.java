@@ -23,6 +23,8 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import io.dplusic.stardust.ai.AI;
+import io.dplusic.stardust.ai.NormalAI;
 import io.dplusic.stardust.entity.Player;
 import io.dplusic.stardust.entity.Star;
 
@@ -114,7 +116,7 @@ public class PlayingActivity extends Activity {
 		man.registerListener(sListen, roc_sensor,
 				SensorManager.SENSOR_DELAY_GAME);
 
-		ai = new AI(stars);
+		ai = new NormalAI(stars);
 		gameEndManager = new GameEndChecker(
 				this,
 				infectivityViews,
