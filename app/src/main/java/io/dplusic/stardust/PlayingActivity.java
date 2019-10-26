@@ -30,7 +30,7 @@ import io.dplusic.stardust.entity.Star;
 
 public class PlayingActivity extends Activity {
 
-	private static final int GAME_MILLISECOND_PER_CLOCK = 50; // millisecond
+	private static final int GAME_MILLISECOND_PER_CLOCK = 20; // millisecond
 
 	private static final float SENSITIVITY_ROTATE = 0.5f;
 	private static final float SENSITIVITY_ROTATE_ANGLE = 1.3f;
@@ -129,6 +129,13 @@ public class PlayingActivity extends Activity {
 		super.onStart();
 
 		handler.post(updater);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+
+		handler.removeCallbacks(updater);
 	}
 
 	private Runnable updater = new Runnable() {
