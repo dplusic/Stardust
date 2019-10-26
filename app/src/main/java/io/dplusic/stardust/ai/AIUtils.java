@@ -1,5 +1,7 @@
 package io.dplusic.stardust.ai;
 
+import android.util.Pair;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +35,7 @@ public enum AIUtils {
         dust.setInfectivity(halfInfectivity);
     }
 
-    static Star findNearest(Star from, List<Star> stars) {
+    static Pair<Star, Float> findNearest(Star from, List<Star> stars) {
         Star minStar = null;
         float minDistance = Float.MAX_VALUE;
         for (Star star : stars) {
@@ -43,6 +45,11 @@ public enum AIUtils {
                 minStar = star;
             }
         }
-        return minStar;
+
+        if (minStar == null) {
+            return null;
+        } else {
+            return Pair.create(minStar, minDistance);
+        }
     }
 }
