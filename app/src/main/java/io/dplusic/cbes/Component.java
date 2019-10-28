@@ -15,12 +15,6 @@ public abstract class Component {
 					"Only one entity for a component is acceptable");
 		}
 		this.entity = entity;
-
-		EntityManager.getInstance().getComponentManager().addComponent(this);
-	}
-
-	void remove() {
-		EntityManager.getInstance().getComponentManager().removeComponent(this);
 	}
 
 	public void update() {

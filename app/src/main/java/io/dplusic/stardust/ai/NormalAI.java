@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import io.dplusic.cbes.EntityManager;
+import io.dplusic.stardust.Selector;
 import io.dplusic.stardust.entity.Player;
 import io.dplusic.stardust.entity.Star;
 
@@ -15,6 +17,7 @@ public class NormalAI implements AI {
     private static final int TICKS_BETWEEN_ACTIONS = 60 * 2;
     private static final int MAX_DUST_IN_ONE_ACTION = 4;
 
+    private EntityManager entityManager;
     private List<Star> stars;
 
     private ActionWithInterval moveActionWithInterval = new ActionWithInterval(TICKS_BETWEEN_ACTIONS, new Runnable() {
@@ -47,12 +50,13 @@ public class NormalAI implements AI {
 
             List<ActionCandidate> electedList = candidates.subList(0, Math.min(candidates.size(), MAX_DUST_IN_ONE_ACTION));
             for (ActionCandidate elected : electedList) {
-                AIUtils.createDust(elected.comStar, elected.targetStar);
+                AIUtils.createDust(entityManager, elected.comStar, elected.targetStar);
             }
         }
     });
 
-    public NormalAI(List<Star> stars) {
+    public NormalAI(EntityManager entityManager, List<Star> stars) {
+        this.entityManager = entityManager;
         this.stars = stars;
     }
 

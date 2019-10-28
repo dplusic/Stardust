@@ -3,6 +3,7 @@ package io.dplusic.stardust.entity;
 import com.google.common.base.Optional;
 
 import io.dplusic.cbes.Entity;
+import io.dplusic.cbes.EntityManager;
 import io.dplusic.stardust.mesh.Mesh;
 
 public class StardustEntity extends Entity {
@@ -12,10 +13,12 @@ public class StardustEntity extends Entity {
 	private Mesh mesh;
 
 	private Optional<Player> ownerOptional;
+	private Player nobody;
 
 	private int infectivity;
 
-	public StardustEntity(Optional<Player> ownerOptional, Coordinate coordinate) {
+	public StardustEntity(EntityManager entityManager, Optional<Player> ownerOptional, Coordinate coordinate) {
+		super(entityManager);
 
 	    this.ownerOptional = ownerOptional;
 		this.coordinate = coordinate;

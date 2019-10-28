@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Map;
 
 import io.dplusic.cbes.EntityManager;
 import io.dplusic.stardust.entity.Dust;
@@ -18,6 +19,8 @@ public class GameEndChecker {
 
     private Activity playingActivity;
 
+    private Map<Integer, Player> players;
+
     private TextView[] infectivityViews;
     private ViewGroup gameOverView;
     private ViewGroup winView;
@@ -26,11 +29,14 @@ public class GameEndChecker {
 
     public GameEndChecker(
             Activity playingActivity,
+            Map<Integer, Player> players,
             TextView[] infectivityViews,
             ViewGroup gameOverView,
             ViewGroup winView) {
 
         this.playingActivity = playingActivity;
+
+        this.players = players;
 
         this.infectivityViews = infectivityViews;
         this.gameOverView = gameOverView;
@@ -47,7 +53,7 @@ public class GameEndChecker {
 
         for (TextView infectivityView : infectivityViews) {
 
-            Player player = Player.getInstance((Integer) infectivityView
+            Player player = players.get((Integer) infectivityView
                     .getTag());
 
             int infectivityOfStars = 0;
@@ -97,9 +103,6 @@ public class GameEndChecker {
             Intent intent = playingActivity.getIntent();
             playingActivity.finish();
             playingActivity.startActivity(intent);
-
-            EntityManager.reset();
-            Player.reset();
         }
     };
 }

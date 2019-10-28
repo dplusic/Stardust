@@ -4,12 +4,15 @@ import com.google.common.base.Optional;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import io.dplusic.cbes.EntityManager;
 import io.dplusic.stardust.component.Selectable;
 import io.dplusic.stardust.entity.Dust;
 import io.dplusic.stardust.entity.Player;
 import io.dplusic.stardust.entity.Star;
 
 public class Selector {
+
+	private OnSelected onSelected;
 
 	private ConcurrentLinkedQueue<Selectable> selectedSelectables;
 
@@ -21,7 +24,9 @@ public class Selector {
 	private Selectable lastTouchedSelectable;
 	private Selectable lastSelectedSelectable;
 
-	private Selector() {
+	public Selector(OnSelected onSelected) {
+		this.onSelected = onSelected;
+
 		selectedSelectables = new ConcurrentLinkedQueue<Selectable>();
 	}
 
@@ -57,19 +62,7 @@ public class Selector {
 
 					selectedSelectables.remove(lastSelectedSelectable);
 
-					for (Selectable selectable : selectedSelectables) {
-
-						// TODO All Selectables are components of Star
-
-						Star start = (Star) selectable.getEntity();
-						int halfInfectivity = start.getInfectivity() / 2;
-
-						Dust dust = new Dust(start,
-								(Star) lastSelectedSelectable.getEntity());
-
-						start.setInfectivity(halfInfectivity);
-						dust.setInfectivity(halfInfectivity);
-					}
+					onSelected.onSelected(selectedSelectables, lastSelectedSelectable);
 
 					selectedSelectables.clear();
 					lastSelectedSelectable = null;
@@ -133,20 +126,13 @@ public class Selector {
 		return ownerOptional.isPresent() && ownerOptional.get().getPlayerType() == Player.PLAYER_TYPE_USER;
 	}
 
-	// Singleton Implementation
-
-	private static Selector instance;
-
-	public static synchronized Selector getInstance() {
-		if (instance == null) {
-			instance = new Selector();
-		}
-		return instance;
-	}
-
 	public boolean isEmptySpaceTouched(){
 		if(selectedSelectables.isEmpty() && lastSelectedSelectable==null)
 			return true;
 		return false;
+	}
+
+	public interface OnSelected {
+		void onSelected(Iterable<Selectable> selectablesFrom, Selectable selectableTo);
 	}
 }

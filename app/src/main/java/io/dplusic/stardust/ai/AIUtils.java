@@ -7,6 +7,7 @@ import com.google.common.base.Optional;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.dplusic.cbes.EntityManager;
 import io.dplusic.stardust.entity.Coordinate;
 import io.dplusic.stardust.entity.Dust;
 import io.dplusic.stardust.entity.Player;
@@ -44,10 +45,10 @@ public enum AIUtils {
         return starGroupsByOnwer;
     }
 
-    static void createDust(Star from, Star to) {
+    static void createDust(EntityManager entityManager, Star from, Star to) {
         int halfInfectivity = from.getInfectivity() / 2;
 
-        Dust dust = new Dust(from, to);
+        Dust dust = new Dust(entityManager, from, to);
 
         from.setInfectivity(halfInfectivity);
         dust.setInfectivity(halfInfectivity);

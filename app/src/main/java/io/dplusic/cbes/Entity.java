@@ -5,31 +5,38 @@ import java.util.List;
 
 public class Entity {
 
+	private EntityManager entityManager;
+
 	private List<Component> components;
 
-	public Entity() {
+	public Entity(EntityManager entityManager) {
+		this.entityManager = entityManager;
+
 		components = new ArrayList<Component>();
 
-		EntityManager.getInstance().addEntity(this);
+		entityManager.addEntity(this);
 	}
 
 	public void addComponent(Component component) {
 		component.setEntity(this);
 		components.add(component);
+
+		entityManager.getComponentManager().addComponent(component);
 	}
 
 	public void removeComponent(Component component) {
-		component.remove();
+		entityManager.getComponentManager().removeComponent(component);
+
 		components.remove(component);
 	}
 
 	public void remove() {
 		for (Component component : components) {
-			component.remove();
+			entityManager.getComponentManager().removeComponent(component);
 		}
 		components.clear();
 
-		EntityManager.getInstance().removeEntity(this);
+		entityManager.removeEntity(this);
 	}
 
 	public void update() {

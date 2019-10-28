@@ -49,9 +49,10 @@ public class StardustRenderer implements Renderer {
 	private int mLabelMsPF;
 	private NumericSprite mNumericSprite;
 
+	private EntityManager entityManager;
 	private Selector selector;
 
-	public StardustRenderer(Resources resources) {
+	public StardustRenderer(EntityManager entityManager, Selector selector, Resources resources) {
 
 		lightAmbientBuffer = GLHelper.fromArrayToBuffer(lightAmbient);
 		lightDiffuseBuffer = GLHelper.fromArrayToBuffer(lightDiffuse);
@@ -70,7 +71,8 @@ public class StardustRenderer implements Renderer {
 		mLabelPaint.setAntiAlias(true);
 		mLabelPaint.setARGB(255, 255, 255, 255);
 
-		selector = Selector.getInstance();
+		this.entityManager = entityManager;
+		this.selector = selector;
 	}
 
 	public void rotateCameraX(float delta) {
@@ -158,7 +160,7 @@ public class StardustRenderer implements Renderer {
 			gl.glDisable(GL10.GL_DITHER);
 			gl.glDisable(GL10.GL_BLEND);
 
-			for (Selectable selectable : EntityManager.getInstance().getComponentManager()
+			for (Selectable selectable : entityManager.getComponentManager()
 					.getComponents(Selectable.class)) {
 				selectable.picking(gl);
 			}
@@ -169,7 +171,7 @@ public class StardustRenderer implements Renderer {
 					- (int) selector.getY(), 1, 1, GL10.GL_RGBA,
 					GL10.GL_UNSIGNED_BYTE, colorBuffer);
 
-			Selectable.selectByColor(colorBuffer.get(), colorBuffer.get(),
+			Selectable.selectByColor(selector, colorBuffer.get(), colorBuffer.get(),
 					colorBuffer.get());
 		}
 
@@ -185,7 +187,7 @@ public class StardustRenderer implements Renderer {
 
 		drawBackground(gl);
 
-		for (Renderable renderable : EntityManager.getInstance().getComponentManager()
+		for (Renderable renderable : entityManager.getComponentManager()
 				.getComponents(Renderable.class)) {
 			renderable.draw(gl);
 		}

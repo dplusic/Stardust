@@ -1,7 +1,9 @@
 package io.dplusic.stardust;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import io.dplusic.android.view.AdvancedMotionEvent;
@@ -26,7 +28,10 @@ import android.widget.TextView;
 import com.google.common.base.Optional;
 
 import io.dplusic.stardust.ai.AI;
+import io.dplusic.stardust.ai.DebugAI;
 import io.dplusic.stardust.ai.NormalAI;
+import io.dplusic.stardust.component.Selectable;
+import io.dplusic.stardust.entity.Dust;
 import io.dplusic.stardust.entity.Player;
 import io.dplusic.stardust.entity.Star;
 
@@ -59,29 +64,31 @@ public class PlayingActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		entityManager = EntityManager.getInstance();
-		selector = Selector.getInstance();
-		renderer = new StardustRenderer(getResources());
+		entityManager = new EntityManager();
+		selector = new Selector(onSelected);
+		renderer = new StardustRenderer(entityManager, selector, getResources());
 
-		Player user = Player.getInstance(Player.PLAYER_TYPE_USER);
-		Player com = Player.getInstance(Player.PLAYER_TYPE_COM);
+		Player user = new Player(entityManager, Player.PLAYER_TYPE_USER);
+		Player com = new Player(entityManager, Player.PLAYER_TYPE_COM);
+
+		Map<Integer, Player> players = new HashMap<>();
+		players.put(Player.PLAYER_TYPE_USER, user);
+		players.put(Player.PLAYER_TYPE_COM, com);
 
 		List<Star> stars = new ArrayList<Star>();
 
 		for (int i = 180; i > -180; i -= 45) {
 			for (int j = 60; j > -90; j -= 30) {
-				Star star = new Star(Optional.<Player>absent(), random.nextInt(), i, j);
+				Star star = new Star(entityManager, Optional.<Player>absent(), random.nextInt(), i, j);
 				stars.add(star);
 			}
 		}
 
-		Star namedStar1 = new Star(Optional.of(user), random.nextInt(), 0, 90);
-		Star namedStar2 = new Star(Optional.of(com), random.nextInt(), 0, -90);
+		Star namedStar1 = new Star(entityManager, Optional.of(user), random.nextInt(), 0, 90);
+		Star namedStar2 = new Star(entityManager, Optional.of(com), random.nextInt(), 0, -90);
 
 		stars.add(namedStar1);
 		stars.add(namedStar2);
-
-		List<Player> players = Player.getActivePlayers();
 
 		ViewGroup playingLayout = (ViewGroup) getLayoutInflater().inflate(R.layout.playing, null);
 		setContentView(playingLayout);
@@ -90,20 +97,8 @@ public class PlayingActivity extends Activity {
 			playingLayout.findViewById(R.id.textView_score1),
 			playingLayout.findViewById(R.id.textView_score2)
 		};
-
-		for (int i = 0; i < infectivityViews.length; i++) {
-
-			TextView infectivityView = infectivityViews[i];
-			Player player = players.get(i);
-			float[] playerIdColor = player.getPlayerIdColor();
-
-			infectivityView.setBackgroundColor(Color.argb(
-					(int) (playerIdColor[3] * 255),
-					(int) (playerIdColor[0] * 255),
-					(int) (playerIdColor[1] * 255),
-					(int) (playerIdColor[2] * 255)));
-			infectivityView.setTag(player.getPlayerType());
-		}
+		initInfectivityView(infectivityViews[0], user);
+		initInfectivityView(infectivityViews[1], com);
 
 		GLSurfaceView glSurfaceView = new GLSurfaceView(this);
 		glSurfaceView.setRenderer(renderer);
@@ -115,9 +110,10 @@ public class PlayingActivity extends Activity {
 		man.registerListener(sListen, roc_sensor,
 				SensorManager.SENSOR_DELAY_GAME);
 
-		ai = new NormalAI(stars);
+		ai = new NormalAI(entityManager, stars);
 		gameEndManager = new GameEndChecker(
 				this,
+				players,
 				infectivityViews,
 				(ViewGroup) playingLayout.findViewById(R.id.layout_gameover),
 				(ViewGroup) playingLayout.findViewById(R.id.layout_win));
@@ -135,6 +131,34 @@ public class PlayingActivity extends Activity {
 		super.onStop();
 
 		handler.removeCallbacks(updater);
+	}
+
+	private Selector.OnSelected onSelected = new Selector.OnSelected() {
+		@Override
+		public void onSelected(Iterable<Selectable> selectablesFrom, Selectable selectableTo) {
+			for (Selectable selectable : selectablesFrom) {
+
+				Star start = (Star) selectable.getEntity();
+				int halfInfectivity = start.getInfectivity() / 2;
+
+				Dust dust = new Dust(entityManager, start,
+						(Star) selectableTo.getEntity());
+
+				start.setInfectivity(halfInfectivity);
+				dust.setInfectivity(halfInfectivity);
+			}
+		}
+	};
+
+	private void initInfectivityView(TextView infectivityView, Player player) {
+		float[] playerIdColor = player.getPlayerIdColor();
+
+		infectivityView.setBackgroundColor(Color.argb(
+				(int) (playerIdColor[3] * 255),
+				(int) (playerIdColor[0] * 255),
+				(int) (playerIdColor[1] * 255),
+				(int) (playerIdColor[2] * 255)));
+		infectivityView.setTag(player.getPlayerType());
 	}
 
 	private Runnable updater = new Runnable() {

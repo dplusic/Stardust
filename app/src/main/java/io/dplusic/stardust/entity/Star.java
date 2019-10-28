@@ -4,6 +4,8 @@ import com.google.common.base.Optional;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import io.dplusic.cbes.EntityManager;
+import io.dplusic.stardust.Selector;
 import io.dplusic.stardust.component.Propagatable;
 import io.dplusic.stardust.component.Renderable;
 import io.dplusic.stardust.component.Selectable;
@@ -16,8 +18,8 @@ public class Star extends StardustEntity {
 
 	private int type;
 
-	public Star(Optional<Player> owner, int type, float longitude, float latitude) {
-		super(owner, new Coordinate(longitude, latitude, ALTITUDE));
+	public Star(EntityManager entityManager, Optional<Player> ownerOptional, int type, float longitude, float latitude) {
+		super(entityManager, ownerOptional, new Coordinate(longitude, latitude, ALTITUDE));
 
 		this.type = type;
 

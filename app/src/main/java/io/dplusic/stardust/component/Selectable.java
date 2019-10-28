@@ -59,7 +59,7 @@ public class Selectable extends Renderable {
 		super.update();
 	}
 
-	public static void selectByColor(byte red, byte green, byte blue) {
+	public static void selectByColor(Selector selector, byte red, byte green, byte blue) {
 
 		int idRed = getColorId(red);
 		int idGreen = getColorId(green);
@@ -75,7 +75,7 @@ public class Selectable extends Renderable {
 		} else {
 			selected = idMap.get(id);
 		}
-		Selector.getInstance().touchOver(selected);
+		selector.touchOver(selected);
 	}
 
 	private static int getColorId(byte color) {

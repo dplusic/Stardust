@@ -25,24 +25,4 @@ public class EntityManager {
 			entity.update();
 		}
 	}
-
-	//
-	// Singleton Implementation
-
-	private static EntityManager instance;
-
-	public static EntityManager getInstance() {
-		if (instance == null) {
-			instance = new EntityManager();
-		}
-		return instance;
-	}
-
-	public static void reset() {
-		instance = null;
-	}
-
-	private EntityManager() {
-
-	}
 }

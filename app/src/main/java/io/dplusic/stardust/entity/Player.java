@@ -7,12 +7,12 @@ import java.util.Map;
 import java.util.Random;
 
 import io.dplusic.cbes.Entity;
+import io.dplusic.cbes.EntityManager;
 
 public class Player extends Entity {
 
 	public static final int PLAYER_TYPE_USER = 0;
 	public static final int PLAYER_TYPE_COM = 1;
-	public static final int NUMBER_OF_PLAYER_TYPE = 2;
 
 	public static final float[] PLAYER_ID_COLOR_USER = { 0, 0.5f, 1, 1 };
 
@@ -24,7 +24,8 @@ public class Player extends Entity {
 
 	private float[] playerIdColor;
 
-	private Player(int playerType) {
+	public Player(EntityManager entityManager, int playerType) {
+		super(entityManager);
 
 		ownedListMap = new HashMap<Class<? extends StardustEntity>, List<? extends StardustEntity>>();
 
@@ -78,29 +79,4 @@ public class Player extends Entity {
 
 		ownedList.remove(owned);
 	}
-
-	private static List<Player> activePlayers = new ArrayList<Player>();
-
-	public static List<Player> getActivePlayers() {
-		return activePlayers;
-	}
-
-	//
-	// Singleton Implementation
-
-	private static Player[] players = new Player[NUMBER_OF_PLAYER_TYPE];
-
-	public static Player getInstance(int playerType) {
-		if (players[playerType] == null) {
-			Player newPlayer = new Player(playerType);
-			players[playerType] = newPlayer;
-			activePlayers.add(newPlayer);
-		}
-		return players[playerType];
-	}
-
-	public static void reset() {
-		players = new Player[NUMBER_OF_PLAYER_TYPE];
-	}
-
 }

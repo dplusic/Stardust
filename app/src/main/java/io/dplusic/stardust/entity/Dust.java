@@ -1,5 +1,6 @@
 package io.dplusic.stardust.entity;
 
+import io.dplusic.cbes.EntityManager;
 import io.dplusic.stardust.component.Contaminatable;
 import io.dplusic.stardust.component.Movable;
 import io.dplusic.stardust.component.Renderable;
@@ -10,8 +11,8 @@ public class Dust extends StardustEntity {
 
 	public static final float ALTITUDE = 85;
 
-	public Dust(Star start, final Star destination) {
-		super(start.getOwnerOptional(), new Coordinate(start.coordinate.longitude,
+	public Dust(EntityManager entityManager, Star start, final Star destination) {
+		super(entityManager, start.getOwnerOptional(), new Coordinate(start.coordinate.longitude,
 				start.coordinate.latitude, ALTITUDE));
 
 		Mesh mesh = new Cube(5, 5, 5);
