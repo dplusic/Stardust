@@ -23,6 +23,8 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.common.base.Optional;
+
 import io.dplusic.stardust.ai.AI;
 import io.dplusic.stardust.ai.NormalAI;
 import io.dplusic.stardust.entity.Player;
@@ -63,26 +65,23 @@ public class PlayingActivity extends Activity {
 
 		Player user = Player.getInstance(Player.PLAYER_TYPE_USER);
 		Player com = Player.getInstance(Player.PLAYER_TYPE_COM);
-		Player nobody = Player.getInstance(Player.PLAYER_TYPE_NOBODY);
-
 
 		List<Star> stars = new ArrayList<Star>();
 
 		for (int i = 180; i > -180; i -= 45) {
 			for (int j = 60; j > -90; j -= 30) {
-				Star star = new Star(nobody, random.nextInt(), i, j);
+				Star star = new Star(Optional.<Player>absent(), random.nextInt(), i, j);
 				stars.add(star);
 			}
 		}
 
-		Star namedStar1 = new Star(user, random.nextInt(), 0, 90);
-		Star namedStar2 = new Star(com, random.nextInt(), 0, -90);
+		Star namedStar1 = new Star(Optional.of(user), random.nextInt(), 0, 90);
+		Star namedStar2 = new Star(Optional.of(com), random.nextInt(), 0, -90);
 
 		stars.add(namedStar1);
 		stars.add(namedStar2);
 
 		List<Player> players = Player.getActivePlayers();
-		players.remove(Player.getInstance(Player.PLAYER_TYPE_NOBODY));
 
 		ViewGroup playingLayout = (ViewGroup) getLayoutInflater().inflate(R.layout.playing, null);
 		setContentView(playingLayout);

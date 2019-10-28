@@ -1,5 +1,7 @@
 package io.dplusic.stardust.entity;
 
+import com.google.common.base.Optional;
+
 import io.dplusic.cbes.Entity;
 import io.dplusic.stardust.mesh.Mesh;
 
@@ -9,45 +11,42 @@ public class StardustEntity extends Entity {
 
 	private Mesh mesh;
 
-	private Player owner;
+	private Optional<Player> ownerOptional;
 
 	private int infectivity;
 
-	public StardustEntity(Player owner, Coordinate coordinate) {
+	public StardustEntity(Optional<Player> ownerOptional, Coordinate coordinate) {
 
-		this.owner = owner;
+	    this.ownerOptional = ownerOptional;
 		this.coordinate = coordinate;
 
-		owner.addOwned(this);
-
-		if (owner.getPlayerType() == Player.PLAYER_TYPE_NOBODY) {
-			infectivity = 0;
-		} else {
+		if (this.ownerOptional.isPresent()) {
+            this.ownerOptional.get().addOwned(this);
 			infectivity = 100;
+		} else {
+			infectivity = 0;
 		}
 	}
 
 	public void affectInfectivity(Player player, int infectivity) {
 
-		if (player == owner) {
-			this.infectivity += infectivity;
-		} else {
-			switch (owner.getPlayerType()) {
-			case Player.PLAYER_TYPE_NOBODY:
-				changeOwner(player);
+		if (ownerOptional.isPresent()) {
+			Player owner = ownerOptional.get();
+			if (owner == player) {
 				this.infectivity += infectivity;
-				break;
-			default:
+			} else {
 				this.infectivity -= infectivity;
-				break;
 			}
+ 		} else {
+			changeOwner(Optional.of(player));
+			this.infectivity += infectivity;
 		}
 
 		if (this.infectivity > 100) {
 			this.infectivity = 100;
 		} else if (this.infectivity <= 0) {
 			this.infectivity = 0;
-			changeOwner(Player.getInstance(Player.PLAYER_TYPE_NOBODY));
+			changeOwner(Optional.<Player>absent());
 		}
 	}
 
@@ -59,8 +58,8 @@ public class StardustEntity extends Entity {
 		this.mesh = mesh;
 	}
 
-	public Player getOwner() {
-		return owner;
+	public Optional<Player> getOwnerOptional() {
+		return ownerOptional;
 	}
 
 	public int getInfectivity() {
@@ -71,16 +70,16 @@ public class StardustEntity extends Entity {
 		this.infectivity = infectivity;
 	}
 
-	private void changeOwner(Player owner) {
+	private void changeOwner(Optional<Player> ownerOptional) {
 
-		if (this.owner != null) {
-			this.owner.removeOwned(this);
+		if (this.ownerOptional.isPresent()) {
+			this.ownerOptional.get().removeOwned(this);
 		}
 
-		this.owner = owner;
+		this.ownerOptional = ownerOptional;
 
-		if (this.owner.getPlayerType() != Player.PLAYER_TYPE_NOBODY) {
-			this.owner.addOwned(this);
+		if (this.ownerOptional.isPresent()) {
+			this.ownerOptional.get().addOwned(this);
 		}
 	}
 

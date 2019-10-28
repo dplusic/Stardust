@@ -1,5 +1,7 @@
 package io.dplusic.stardust.component;
 
+import com.google.common.base.Optional;
+
 import io.dplusic.stardust.entity.Player;
 import io.dplusic.stardust.entity.StardustEntity;
 
@@ -15,10 +17,10 @@ public class Propagatable extends StardustComponent {
 			consumedClock = delayClock;
 
 			StardustEntity stardust = getEntity();
-			Player owner = stardust.getOwner();
+			Optional<Player> ownerOptional = stardust.getOwnerOptional();
 
-			if (owner.getPlayerType() != Player.PLAYER_TYPE_NOBODY) {
-				stardust.affectInfectivity(owner, 1);
+			if (ownerOptional.isPresent()) {
+				stardust.affectInfectivity(ownerOptional.get(), 1);
 			}
 			
 		}

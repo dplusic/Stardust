@@ -20,18 +20,15 @@ public class NormalAI implements AI {
     private ActionWithInterval moveActionWithInterval = new ActionWithInterval(TICKS_BETWEEN_ACTIONS, new Runnable() {
         @Override
         public void run() {
-            List<List<Star>> groupedStars = AIUtils.groupStars(stars);
-            List<Star> nobodyStars = groupedStars.get(Player.PLAYER_TYPE_NOBODY);
-            List<Star> userStars = groupedStars.get(Player.PLAYER_TYPE_USER);
-            List<Star> comStars = groupedStars.get(Player.PLAYER_TYPE_COM);
+            AIUtils.StarGroupsByOnwer starGroupsByOnwer = AIUtils.groupStars(stars);
 
             List<Star> otherStars = new ArrayList<>(stars.size());
-            otherStars.addAll(nobodyStars);
-            otherStars.addAll(userStars);
+            otherStars.addAll(starGroupsByOnwer.nobody);
+            otherStars.addAll(starGroupsByOnwer.user);
 
             List<ActionCandidate> candidates = new ArrayList<>(otherStars.size());
 
-            for (Star comStar : comStars) {
+            for (Star comStar : starGroupsByOnwer.com) {
                 if (comStar.getInfectivity() > 50) {
                     Pair<Star, Float> nearestPair = AIUtils.findNearest(comStar, otherStars);
                     if (nearestPair != null) {

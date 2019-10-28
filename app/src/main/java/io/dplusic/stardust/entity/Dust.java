@@ -11,11 +11,10 @@ public class Dust extends StardustEntity {
 	public static final float ALTITUDE = 85;
 
 	public Dust(Star start, final Star destination) {
-		super(start.getOwner(), new Coordinate(start.coordinate.longitude,
+		super(start.getOwnerOptional(), new Coordinate(start.coordinate.longitude,
 				start.coordinate.latitude, ALTITUDE));
 
 		Mesh mesh = new Cube(5, 5, 5);
-		mesh.setColor(start.getOwner().getPlayerIdColor());
 		setMesh(mesh);
 
 		Movable movable = new Movable(

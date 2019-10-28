@@ -1,5 +1,7 @@
 package io.dplusic.stardust;
 
+import com.google.common.base.Optional;
+
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import io.dplusic.stardust.component.Selectable;
@@ -127,7 +129,8 @@ public class Selector {
 	}
 
 	private static boolean isOfUserPlayer(Selectable seletatble) {
-		return seletatble.getEntity().getOwner().getPlayerType() == Player.PLAYER_TYPE_USER;
+		Optional<Player> ownerOptional = seletatble.getEntity().getOwnerOptional();
+		return ownerOptional.isPresent() && ownerOptional.get().getPlayerType() == Player.PLAYER_TYPE_USER;
 	}
 
 	// Singleton Implementation

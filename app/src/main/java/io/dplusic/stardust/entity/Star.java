@@ -1,5 +1,7 @@
 package io.dplusic.stardust.entity;
 
+import com.google.common.base.Optional;
+
 import javax.microedition.khronos.opengles.GL10;
 
 import io.dplusic.stardust.component.Propagatable;
@@ -14,13 +16,12 @@ public class Star extends StardustEntity {
 
 	private int type;
 
-	public Star(Player owner, int type, float longitude, float latitude) {
+	public Star(Optional<Player> owner, int type, float longitude, float latitude) {
 		super(owner, new Coordinate(longitude, latitude, ALTITUDE));
 
 		this.type = type;
 
 		Mesh mesh = new Cube(10, 20, 20);
-		mesh.setColor(owner.getPlayerIdColor());
 		setMesh(mesh);
 
 		Mesh selectingMesh = new Cube(11, 21, 21);

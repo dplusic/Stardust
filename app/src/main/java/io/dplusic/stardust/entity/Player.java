@@ -10,12 +10,10 @@ import io.dplusic.cbes.Entity;
 
 public class Player extends Entity {
 
-	public static final int PLAYER_TYPE_NOBODY = 0;
-	public static final int PLAYER_TYPE_USER = 1;
-	public static final int PLAYER_TYPE_COM = 2;
-	public static final int NUMBER_OF_PLAYER_TYPE = 3;
+	public static final int PLAYER_TYPE_USER = 0;
+	public static final int PLAYER_TYPE_COM = 1;
+	public static final int NUMBER_OF_PLAYER_TYPE = 2;
 
-	public static final float[] PLAYER_ID_COLOR_NOBODY = { 0.6f, 0.6f, 0.6f, 1 };
 	public static final float[] PLAYER_ID_COLOR_USER = { 0, 0.5f, 1, 1 };
 
 	private Map<Class<? extends StardustEntity>, List<? extends StardustEntity>> ownedListMap;
@@ -33,9 +31,6 @@ public class Player extends Entity {
 		this.playerType = playerType;
 
 		switch (playerType) {
-		case PLAYER_TYPE_NOBODY:
-			playerIdColor = PLAYER_ID_COLOR_NOBODY;
-			break;
 		case PLAYER_TYPE_USER:
 			playerIdColor = PLAYER_ID_COLOR_USER;
 			break;

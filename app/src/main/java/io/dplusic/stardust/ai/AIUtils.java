@@ -2,28 +2,46 @@ package io.dplusic.stardust.ai;
 
 import android.util.Pair;
 
+import com.google.common.base.Optional;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import io.dplusic.stardust.entity.Coordinate;
 import io.dplusic.stardust.entity.Dust;
+import io.dplusic.stardust.entity.Player;
 import io.dplusic.stardust.entity.Star;
 
 public enum AIUtils {
     ;
 
+    static class StarGroupsByOnwer {
+        public List<Star> com;
+        public List<Star> user;
+        public List<Star> nobody;
+    }
 
-    static List<List<Star>> groupStars(List<Star> stars) {
-        List<List<Star>> groupedStars = new ArrayList<>(3);
-        groupedStars.add(new ArrayList<Star>(stars.size()));
-        groupedStars.add(new ArrayList<Star>(stars.size()));
-        groupedStars.add(new ArrayList<Star>(stars.size()));
+    static StarGroupsByOnwer groupStars(List<Star> stars) {
+        StarGroupsByOnwer starGroupsByOnwer = new StarGroupsByOnwer();
+        starGroupsByOnwer.com  = new ArrayList<Star>(stars.size());
+        starGroupsByOnwer.user = new ArrayList<Star>(stars.size());
+        starGroupsByOnwer.nobody = new ArrayList<Star>(stars.size());
 
         for (Star star : stars) {
-            groupedStars.get(star.getOwner().getPlayerType()).add(star);
+            Optional<Player> ownerOptional = star.getOwnerOptional();
+            if (ownerOptional.isPresent()) {
+                Player owner = ownerOptional.get();
+                if (owner.getPlayerType() == Player.PLAYER_TYPE_COM) {
+                    starGroupsByOnwer.com.add(star);
+                } else if (owner.getPlayerType() == Player.PLAYER_TYPE_USER) {
+                    starGroupsByOnwer.user.add(star);
+                }
+            } else {
+                starGroupsByOnwer.nobody.add(star);
+            }
         }
 
-        return groupedStars;
+        return starGroupsByOnwer;
     }
 
     static void createDust(Star from, Star to) {

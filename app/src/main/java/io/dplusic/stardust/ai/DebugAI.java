@@ -17,10 +17,9 @@ public class DebugAI implements AI {
 
     public void update() {
 
-        List<List<Star>> groupedStars = AIUtils.groupStars(stars);
-        List<Star> comStars = groupedStars.get(Player.PLAYER_TYPE_COM);
+        AIUtils.StarGroupsByOnwer starGroupsByOnwer = AIUtils.groupStars(stars);
         if (elapsed > 100) {
-            for (Star comStar : comStars) {
+            for (Star comStar : starGroupsByOnwer.com) {
                 comStar.setInfectivity(0);
             }
         }

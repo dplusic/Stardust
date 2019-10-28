@@ -3,11 +3,17 @@ package io.dplusic.stardust.component;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.opengl.Matrix;
+
+import com.google.common.base.Optional;
+
 import io.dplusic.stardust.entity.Coordinate;
+import io.dplusic.stardust.entity.Player;
 import io.dplusic.stardust.entity.StardustEntity;
 import io.dplusic.stardust.mesh.Mesh;
 
 public class Renderable extends StardustComponent {
+
+	private static final float[] COLOR_NOBODY = { 0.6f, 0.6f, 0.6f, 1 };
 
 	public void draw(GL10 gl) {
 		getEntity().getMesh().draw(gl);
@@ -20,7 +26,13 @@ public class Renderable extends StardustComponent {
 		Mesh mesh = entity.getMesh();
 
 		updateMeshLocation(mesh, entity.coordinate);
-		mesh.setColor(entity.getOwner().getPlayerIdColor());
+
+		Optional<Player> ownerOptional = entity.getOwnerOptional();
+		if (ownerOptional.isPresent()) {
+			mesh.setColor(entity.getOwnerOptional().get().getPlayerIdColor());
+		} else {
+			mesh.setColor(COLOR_NOBODY);
+		}
 		mesh.setAlpha((entity.getInfectivity() / 200f + 0.5f));
 
 		super.update();

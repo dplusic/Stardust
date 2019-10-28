@@ -17,9 +17,9 @@ public class Contaminatable extends StardustComponent {
 	public void update() {
 
 		StardustEntity contaminating = getEntity();
-		Player ownerOfContaminating = contaminating.getOwner();
 
 		if (contaminating.getInfectivity() >= 1) {
+			Player ownerOfContaminating = contaminating.getOwnerOptional().get();
 			contaminating.affectInfectivity(ownerOfContaminating, -1);
 			contaminated.affectInfectivity(ownerOfContaminating, 1);
 		} else {
