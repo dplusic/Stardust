@@ -16,12 +16,8 @@ public class Star extends StardustEntity {
 
 	public static final float ALTITUDE = 80;
 
-	private int type;
-
-	public Star(EntityManager entityManager, Optional<Player> ownerOptional, int type, float longitude, float latitude) {
+	public Star(EntityManager entityManager, Optional<Player> ownerOptional, float longitude, float latitude) {
 		super(entityManager, ownerOptional, new Coordinate(longitude, latitude, ALTITUDE));
-
-		this.type = type;
 
 		Mesh mesh = new Cube(10, 20, 20);
 		setMesh(mesh);
@@ -35,7 +31,4 @@ public class Star extends StardustEntity {
 		addComponent(new Propagatable());
 	}
 
-	public int getType() {
-		return type;
-	}
 }

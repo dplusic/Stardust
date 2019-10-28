@@ -79,13 +79,13 @@ public class PlayingActivity extends Activity {
 
 		for (int i = 180; i > -180; i -= 45) {
 			for (int j = 60; j > -90; j -= 30) {
-				Star star = new Star(entityManager, Optional.<Player>absent(), random.nextInt(), i, j);
+				Star star = new Star(entityManager, Optional.<Player>absent(), i, j);
 				stars.add(star);
 			}
 		}
 
-		Star namedStar1 = new Star(entityManager, Optional.of(user), random.nextInt(), 0, 90);
-		Star namedStar2 = new Star(entityManager, Optional.of(com), random.nextInt(), 0, -90);
+		Star namedStar1 = new Star(entityManager, Optional.of(user), 0, 90);
+		Star namedStar2 = new Star(entityManager, Optional.of(com), 0, -90);
 
 		stars.add(namedStar1);
 		stars.add(namedStar2);
